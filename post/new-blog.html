@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>New Blog Infrastructure</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+		integrity="sha384-4Y0nObtF3CbKnh+lpzmAVdAMtQXl+ganWiiv73RcGVdRdfVIya8Cao1C8ZsVRRDz" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+		integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+		crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header a.copy {
+			opacity: 0;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header:hover a.copy {
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center
+		}
+
+		abbr {
+			cursor: help
+		}
+
+		pre:has(> code:only-child):not(:has(> :not(code))) {
+			overflow-x: scroll
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+
+		async function copyToClipboard(id) {
+			const url = `${window.location.origin}${window.location.pathname}#${id}`
+			await navigator.clipboard.writeText(url)
+			$.toast({
+				class: 'success',
+				showProgress: 'bottom',
+				class: 'green',
+				message: 'Link copied to clipboard!'
+			})
+		}
+
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			})
+
+			for (const elem of document.querySelectorAll(":is(h1, h2, h3, h4, h5, h6).ui.header a.copy")) {
+				elem.addEventListener("click", async function () {
+					await copyToClipboard(elem.parentElement.id)
+				})
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">New Blog Infrastructure</h1>
+	<div class="ui text container">
+		<p><a href="../">MikuAuahDark's blog</a></p>
+		<p>
+			<abbr title="2026-03-29T22:44:18+08:00"><time datetime="2026-03-29T22:44:18+08:00" convert-to-local>2026-03-29T22:44:18+08:00</time></abbr>
+			
+		</p>
+		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/new-blog.md">Post source</a></p>
+		<article class="ui blue segment">
+			<p>So, welcome to my new blog.</p>
+<h2 class="ui header" id="but-why-new-blog"><a href="#but-why-new-blog">But, Why New Blog?</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h2>
+<p>There are few reasons:</p>
+<ul class="ui list"><li>I need more control on writing the blog.</li>
+<li>I want something where I can just write in Markdown.</li>
+<li>I want blog where I have both local and remote copy of my blog post.</li>
+</ul>
+<p>Unfortunately, Blogger, <a href="https://auahdark687291.blogspot.com">where my old blog is hosted on</a>, doesn't satisfy that
+criteria.</p>
+<h2 class="ui header" id="but-isnt-blogger-has-more-features"><a href="#but-isnt-blogger-has-more-features">But isn't Blogger Has More Features?</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h2>
+<p>Of course. Blogger currently has its advantages:</p>
+<ul class="ui list"><li>Tagging system</li>
+<li>Post categorization</li>
+<li>Better SEO</li>
+</ul>
+<p>But I believe with the current engine, those can be implemented later.</p>
+<h2 class="ui header" id="how-new-blog-works"><a href="#how-new-blog-works">How New Blog Works?</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h2>
+<h3 class="ui header" id="trivial-explanation"><a href="#trivial-explanation">Trivial Explanation</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h3>
+<p>The blog uses Python, GitHub Actions, and GitHub Pages for its whole infrastructure. Basically:</p>
+<ul class="ui list"><li>Python script to generate all the post pages and the index.html</li>
+<li>GitHub Actions used to run the Python script in CI.</li>
+<li>GitHub Pages deploys it to the web.</li>
+</ul>
+<h3 class="ui header" id="technical-explanation"><a href="#technical-explanation">Technical Explanation</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h3>
+<h4 class="ui header" id="blog-repository"><a href="#blog-repository">Blog Repository</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h4>
+<p>The <a href="https://github.com/MikuAuahDark/blog">blog repository</a> is where all the markdown files (blog post) are stored.
+It's set up such that pushing new <code>.md</code> (and only <code>.md</code>) files triggers page rebuild. It has 3 branches:</p>
+<ul class="ui list"><li><code>master</code> - Where the blog assets and renderer files are placed. Despite the branch name, I do not support slavery!</li>
+<li><code>metadata</code> - Date time information about each blog post.</li>
+<li><code>gh-pages</code> - Deployed page, using GitHub Pages.</li>
+</ul>
+<p>If you look on the <code>master</code> branch, there will be these files:</p>
+<ul class="ui list"><li><code>assets</code> - Static assets, placed in <code>assets/</code> ono the deployed GH Pages.</li>
+<li><code>renderer</code> - Jinja2 templating engine used on how to render the index page of the blog and each page.<ul class="ui list"><li><code>render_page.py</code> expose single <code>render</code> Python function using <code>page.html</code> as template. This generates HTML for a
+blog post.</li>
+<li><code>render_index.py</code> expose single <code>render</code> Python function using <code>index.html</code> as template. This generates HTML for
+the main page, e.g. opening <a href="https://mikuauahdark.github.io/blog">https://mikuauahdark.github.io/blog</a>.</li>
+</ul>
+</li>
+<li>The <code>*.md</code> files - The actual blog post. Each blog post must have YAML front matter with at least <code>title</code> element.
+If you look on the source of this blog post markdown, you may note there's only <code>title</code>, while the others (like
+<a href="sif1-note-handling.html">SIF Note Handling</a>) also has <code>original-date</code>. The <code>original-date</code> is used to mark that the
+original blog post is actually written in the past. If no <code>original-date</code> is present, the blog post date is
+automatically deducted by the commit date where this file is added/modified.</li>
+</ul>
+<p>One thing to remember that it explicitly only look for blog post with extension of <code>.md</code>, not <code>.markdown</code>. This is
+important to make sure the README and LICENSE of the blog repository is skipped.</p>
+<h4 class="ui header" id="blog-engine"><a href="#blog-engine">Blog Engine</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h4>
+<p>Now files in <code>renderer</code> cannot stand on its own. That's why there's called
+<a href="https://github.com/MikuAuahDark/blog-engine">&quot;blog engine&quot;</a>. Blog engine has single script <code>main.py</code> which handles
+most of the thing:</p>
+<ul class="ui list"><li>HTML generation by invoking the blog repository's <code>renderer</code> scripts.</li>
+<li>Metadata modification</li>
+<li>Post date calculation, and modify last update.</li>
+</ul>
+<h4 class="ui header" id="workflow"><a href="#workflow">Workflow</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h4>
+<p>The GitHub Actions workflow is as follows:</p>
+<ol class="ui list"><li>Checkout the &quot;blog engine&quot; repository.</li>
+<li>Checkout the blog repository on all 3 branches: <code>master</code>, <code>metadata</code>, and <code>gh-pages</code>. It's checked out on <code>content</code>,
+<code>metadata</code>, and <code>gh-pages</code> folder respectively.</li>
+<li>It setups the Python, install the needed requirements both for the blog engine and the repository.</li>
+<li>It then run the <code>main.py</code> script.</li>
+<li>Copy all <code>assets/</code> from <code>content/assets</code> to <code>gh-pages/assets</code>, using <code>content</code> one as SSOT.</li>
+<li>It then commits changes both in <code>metadata</code> and <code>gh-pages</code>.</li>
+<li>Changes in <code>gh-pages</code> will be automatically detected by GitHub Pages deployment.</li>
+</ol>
+<p>Honestly, just check the repo. I probably explain these things poorly.</p>
+<h2 class="ui header" id="what-about-other-ssg"><a href="#what-about-other-ssg">What About Other SSG?</a> <a class="copy" title="Copy link to clipboard"><i class="linkify icon"></i></a></h2>
+<p>Honestly I'm not aware of it and the learning curve is probably not straightforward for me. My idea is having blog
+where posting is as simple as making Markdown file, <code>git commit</code>, then <code>git push</code>. Then, the post date is
+automatically deducted from the commit date instead of having to type it manually. Isn't that just awesome?</p>
+<hr />
+<p>So yeah, checkout this blog repository at <a href="https://github.com/MikuAuahDark/blog">https://github.com/MikuAuahDark/blog</a>. The blog content is licensed under
+Creative Commons Attribution 4.0 unless I state it otherwise. the blog engine at
+<a href="https://github.com/MikuAuahDark/blog-engine">https://github.com/MikuAuahDark/blog-engine</a> is licensed under permissive MIT license.</p>
+<p>I'll bring more blog posts from Blogger to here when I have more free time.</p>
+
+		</article>
+		<script>
+			hljs.highlightAll()
+		</script>
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>
