@@ -12,6 +12,11 @@
 		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
 		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+		integrity="sha384-4Y0nObtF3CbKnh+lpzmAVdAMtQXl+ganWiiv73RcGVdRdfVIya8Cao1C8ZsVRRDz" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+		integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+		crossorigin="anonymous"></script>
 	<style>
 		h1.ui.center.aligned.header {
 			margin-top: 1.5em;
@@ -33,6 +38,10 @@
 
 		abbr {
 			cursor: help
+		}
+
+		pre:has(> code:only-child):not(:has(> :not(code))) {
+			overflow-x: scroll
 		}
 	</style>
 	<script>
@@ -79,13 +88,15 @@
 		<p>
 			<abbr title="2018-03-16T22:27:00+08:00"><time datetime="2018-03-16T22:27:00+08:00" convert-to-local>2018-03-16T22:27:00+08:00</time></abbr>
 			
+			(Updated <abbr title="2026-03-29T15:51:46+08:00"><time datetime="2026-03-29T15:51:46+08:00" convert-to-local>2026-03-29T15:51:46+08:00</time></abbr>)
+			
 		</p>
 		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/sif1-image-quality.md">Post source</a></p>
 		<article class="ui blue segment">
 			<p>Some people discussing about SIF cards image quality being sucks since New Year Kanan UR. They said somehow KLab
 change the dithering method used in cards and always uses RGBA4444. I argue that RGB565 for clean UR card are better
 and actually makes sense (clean UR card doesn't need transparency, but &quot;navi&quot;<sup class="footnote-ref" id="fnref-1"><a href="#fn-1">1</a></sup> requires transparency).</p>
-<p>For sake of legal, all images used here are copyright &amp;copy; 2018 KLab Inc.</p>
+<p>For sake of legal, all images used here are copyright © 2018 KLab Inc.</p>
 <p>Here's the original card image, to be used for comparison (the latest Ruby UR card paired with Yoshiko as I'm writing
 this):</p>
 <p><img class="ui bordered rounded image" src="../assets/1489u-origf.png" alt="" title="Ruby-chaaaaannnnn?">
@@ -176,7 +187,7 @@ io.write(ffi.string(rgba4444, w*h*ffi.sizeof(&quot;uint16_t&quot;)))
 os.exit(0)
 </code></pre>
 <p>And here's the command I'm using in WSL:</p>
-<pre><code class="language-basb">ffmpeg -i 1489u-w2x-noise1-rgb565fstein.png -pix_fmt rgb565 -f rawvideo 1489u-w2x-noise1-fstein.rgb565
+<pre><code class="language-bash">ffmpeg -i 1489u-w2x-noise1-rgb565fstein.png -pix_fmt rgb565 -f rawvideo 1489u-w2x-noise1-fstein.rgb565
 ffmpeg -i 1489u-w2x-noise1-rgba444fstein.png -pix_fmt -f rawvideo - | ./rgba4444.lua 512 720 &gt; 1489u-w2x-noise1-fstein.rgba4444
 cat 1489u-w2x-noise1-fstein.rgba4444 | pigz -z -11 &gt; test-1489u-rgba4444.zz
 cat 1489u-w2x-noise1-fstein.rgb565 | pigz -z -11 &gt; test-1489u-rgb565.zz

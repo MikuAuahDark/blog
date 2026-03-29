@@ -12,6 +12,11 @@
 		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
 		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+		integrity="sha384-4Y0nObtF3CbKnh+lpzmAVdAMtQXl+ganWiiv73RcGVdRdfVIya8Cao1C8ZsVRRDz" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+		integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+		crossorigin="anonymous"></script>
 	<style>
 		h1.ui.center.aligned.header {
 			margin-top: 1.5em;
@@ -33,6 +38,10 @@
 
 		abbr {
 			cursor: help
+		}
+
+		pre:has(> code:only-child):not(:has(> :not(code))) {
+			overflow-x: scroll
 		}
 	</style>
 	<script>
@@ -77,7 +86,9 @@
 	<div class="ui text container">
 		<p><a href="../">MikuAuahDark's blog</a></p>
 		<p>
-			<abbr title="2026-03-29T05:36:03+00:00"><time datetime="2026-03-29T05:36:03+00:00" convert-to-local>2026-03-29T05:36:03+00:00</time></abbr>
+			<abbr title="2023-03-29T05:36:03+00:00"><time datetime="2023-03-29T05:36:03+00:00" convert-to-local>2023-03-29T05:36:03+00:00</time></abbr>
+			
+			(Updated <abbr title="2026-03-29T15:33:38+08:00"><time datetime="2026-03-29T15:33:38+08:00" convert-to-local>2026-03-29T15:33:38+08:00</time></abbr>)
 			
 		</p>
 		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/10ms-latency-genshin.md">Post source</a></p>

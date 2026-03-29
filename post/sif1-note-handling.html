@@ -12,6 +12,11 @@
 		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
 		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+		integrity="sha384-4Y0nObtF3CbKnh+lpzmAVdAMtQXl+ganWiiv73RcGVdRdfVIya8Cao1C8ZsVRRDz" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+		integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+		crossorigin="anonymous"></script>
 	<style>
 		h1.ui.center.aligned.header {
 			margin-top: 1.5em;
@@ -33,6 +38,10 @@
 
 		abbr {
 			cursor: help
+		}
+
+		pre:has(> code:only-child):not(:has(> :not(code))) {
+			overflow-x: scroll
 		}
 	</style>
 	<script>
@@ -79,10 +88,12 @@
 		<p>
 			<abbr title="2018-03-26T19:55:00+08:00"><time datetime="2018-03-26T19:55:00+08:00" convert-to-local>2018-03-26T19:55:00+08:00</time></abbr>
 			
+			(Updated <abbr title="2026-03-29T15:51:46+08:00"><time datetime="2026-03-29T15:51:46+08:00" convert-to-local>2026-03-29T15:51:46+08:00</time></abbr>)
+			
 		</p>
 		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/sif1-note-handling.md">Post source</a></p>
 		<article class="ui blue segment">
-			<p><strong>This theoretical article is now invalid. Please see <a href="sif-note-handling-2.html">this article</a> for real-life
+			<p><strong>This theoretical article is now invalid. Please see <a href="sif1-note-handling-2.html">this article</a> for real-life
 observation!</strong></p>
 <p><strong>For sake of clarity, SIF in here refers to SIF1, not SIF2!</strong></p>
 <p>Alright this is probably most questionable question in SIF. How SIF handles note timing and timing offset?</p>
@@ -147,7 +158,7 @@ But at first, look at this table:</p>
 </tr>
 </tbody>
 </table>
-<p>(For more information, see the original image here: &lt;../assets/sif_judgement_value.png&gt;)</p>
+<p>(For more information, see the original image here: <a href="../assets/sif_judgement_value.png">sif_judgement_value.png</a>)</p>
 <p>The reason why you can't get &quot;Bad&quot; in swing note because for swing note, it's stated PERFECT if it's in Great accuracy
 range; it's stated GREAT if it's in Good accuracy range, and so on. And when the judgement range is drawn:</p>
 <p><img class="ui bordered rounded image" src="../assets/sif_judgement_image.png" alt="" title="I don&#x27;t know why there&#x27;s &amp;quot;Miss&amp;quot; endpoint, where in theory you should already miss it if the note is outside the &amp;quot;Bad&amp;quot; note range.">

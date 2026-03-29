@@ -12,6 +12,11 @@
 		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
 	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
 		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/default.min.css"
+		integrity="sha384-4Y0nObtF3CbKnh+lpzmAVdAMtQXl+ganWiiv73RcGVdRdfVIya8Cao1C8ZsVRRDz" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"
+		integrity="sha384-RH2xi4eIQ/gjtbs9fUXM68sLSi99C7ZWBRX1vDrVv6GQXRibxXLbwO2NGZB74MbU"
+		crossorigin="anonymous"></script>
 	<style>
 		h1.ui.center.aligned.header {
 			margin-top: 1.5em;
@@ -33,6 +38,10 @@
 
 		abbr {
 			cursor: help
+		}
+
+		pre:has(> code:only-child):not(:has(> :not(code))) {
+			overflow-x: scroll
 		}
 	</style>
 	<script>
@@ -79,15 +88,15 @@
 		<p>
 			<abbr title="2018-05-01T14:04:00+08:00"><time datetime="2018-05-01T14:04:00+08:00" convert-to-local>2018-05-01T14:04:00+08:00</time></abbr>
 			
+			(Updated <abbr title="2026-03-29T15:51:46+08:00"><time datetime="2026-03-29T15:51:46+08:00" convert-to-local>2026-03-29T15:51:46+08:00</time></abbr>)
+			
 		</p>
 		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/sif1-note-handling-2.md">Post source</a></p>
 		<article class="ui blue segment">
 			<p>Recently some people complain about Live Simulator: 2 timing. I exactly remember that Live Simulator: 2 code the note
 accuracy based on my <a href="sif1-note-handling.html">previous article</a> regarding SIF note handling, but they say it doesn't
 seems right, so I decide to test it in Live Simulator: 2 and SIF. The difference were significant but not very. I
-decide to record my SIF note tapping observation video below.</p>
-<p>&lt;iframe width=&quot;560&quot; height=&quot;315&quot; src=&quot;https://www.youtube-nocookie.com/embed/-0zvBJela3c?si=29pMnWHEpjxqwhrC&quot; title=&quot;YouTube video player&quot; frameborder=&quot;0&quot; allow=&quot;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&quot; referrerpolicy=&quot;strict-origin-when-cross-origin&quot; allowfullscreen&gt;&lt;/iframe&gt;
-(If the YouTube embed doesn't appear, open it in new tab: &lt;https://www.youtube.com/watch?v=-0zvBJela3c&gt;)</p>
+decide to record my SIF note tapping observation video here: <a href="https://www.youtube.com/watch?v=-0zvBJela3c">https://www.youtube.com/watch?v=-0zvBJela3c</a></p>
 <p>Sorry for the 30 FPS video. Google Play Games just can't record thing in 60 FPS at that time. I used 1.6 second note
 speed (note velocity = 250px/s) and <a href="https://www.youtube.com/watch?v=uFG5GQnfJyI">WHITE FIRST LOVE</a> (Normal) beatmap.</p>
 <p>As you may know, SIF use this timing table:</p>
@@ -126,7 +135,7 @@ speed (note velocity = 250px/s) and <a href="https://www.youtube.com/watch?v=uFG
 </tr>
 </tbody>
 </table>
-<p>(For more information, see the original image here: &lt;../assets/sif_judgement_value.png&gt;)</p>
+<p>(For more information, see the original image here: <a href="../assets/sif_judgement_value.png">sif_judgement_value.png</a>)</p>
 <p>From now on, ignore the &quot;Accuracy Distance&quot; column and focus on &quot;Judgement&quot; and &quot;Initial Accuracy&quot; column. However the
 statement &quot;For swing, Perfect = Great accuracy; Great = Good accuracy&quot; still applies in this context.</p>
 <p>Probably you were wondering, how big is 128 pixel? The short answer is, the tap icon diameter. Tap icon diameter is
