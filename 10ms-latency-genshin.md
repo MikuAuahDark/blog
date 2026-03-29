@@ -1,6 +1,6 @@
 ---
 title: Can I have 10ms Latency in Genshin Impact in Indonesia?
-original-date: 2026-03-29T05:36:03+00:00
+original-date: 2023-03-29T05:36:03+00:00
 ---
 
 On the other day, my friend wonder if there will be an Indonesia ISP which allows him to play Genshin Impact with 10ms
