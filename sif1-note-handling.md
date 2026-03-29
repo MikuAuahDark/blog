@@ -2,7 +2,7 @@
 title: "SIF Note Handling"
 original-date: 2018-03-26T19:55:00+08:00
 ---
-**This theoretical article is now invalid. Please see [this article](sif-note-handling-2.html) for real-life
+**This theoretical article is now invalid. Please see [this article](sif1-note-handling-2.html) for real-life
 observation!**
 
 **For sake of clarity, SIF in here refers to SIF1, not SIF2!**
@@ -49,7 +49,7 @@ But at first, look at this table:
 | **GOOD**    | 64                       | 51.2                      |
 | **BAD**     | 112                      | 89.6                      |
 | **MISS**    | 128                      | 102.4                     |
-(For more information, see the original image here: <../assets/sif_judgement_value.png>)
+(For more information, see the original image here: [sif_judgement_value.png](../assets/sif_judgement_value.png))
 
 The reason why you can't get "Bad" in swing note because for swing note, it's stated PERFECT if it's in Great accuracy
 range; it's stated GREAT if it's in Good accuracy range, and so on. And when the judgement range is drawn:

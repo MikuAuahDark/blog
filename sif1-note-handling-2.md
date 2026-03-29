@@ -5,10 +5,7 @@ original-date: 2018-05-01T14:04:00+08:00
 Recently some people complain about Live Simulator: 2 timing. I exactly remember that Live Simulator: 2 code the note
 accuracy based on my [previous article](sif1-note-handling.html) regarding SIF note handling, but they say it doesn't
 seems right, so I decide to test it in Live Simulator: 2 and SIF. The difference were significant but not very. I
-decide to record my SIF note tapping observation video below.
-
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/-0zvBJela3c?si=29pMnWHEpjxqwhrC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-(If the YouTube embed doesn't appear, open it in new tab: <https://www.youtube.com/watch?v=-0zvBJela3c>)
+decide to record my SIF note tapping observation video here: <https://www.youtube.com/watch?v=-0zvBJela3c>
 
 Sorry for the 30 FPS video. Google Play Games just can't record thing in 60 FPS at that time. I used 1.6 second note
 speed (note velocity = 250px/s) and [WHITE FIRST LOVE] (Normal) beatmap.
@@ -22,7 +19,7 @@ As you may know, SIF use this timing table:
 | **GOOD**    | 64                       | 51.2                      |
 | **BAD**     | 112                      | 89.6                      |
 | **MISS**    | 128                      | 102.4                     |
-(For more information, see the original image here: <../assets/sif_judgement_value.png>)
+(For more information, see the original image here: [sif_judgement_value.png](../assets/sif_judgement_value.png))
 
 From now on, ignore the "Accuracy Distance" column and focus on "Judgement" and "Initial Accuracy" column. However the
 statement "For swing, Perfect = Great accuracy; Great = Good accuracy" still applies in this context.

@@ -6,7 +6,7 @@ Some people discussing about SIF cards image quality being sucks since New Year 
 change the dithering method used in cards and always uses RGBA4444. I argue that RGB565 for clean UR card are better
 and actually makes sense (clean UR card doesn't need transparency, but "navi"[^1] requires transparency).
 
-For sake of legal, all images used here are copyright &copy; 2018 KLab Inc.
+For sake of legal, all images used here are copyright © 2018 KLab Inc.
 
 Here's the original card image, to be used for comparison (the latest Ruby UR card paired with Yoshiko as I'm writing
 this):
@@ -117,7 +117,7 @@ os.exit(0)
 
 And here's the command I'm using in WSL:
 
-```basb
+```bash
 ffmpeg -i 1489u-w2x-noise1-rgb565fstein.png -pix_fmt rgb565 -f rawvideo 1489u-w2x-noise1-fstein.rgb565
 ffmpeg -i 1489u-w2x-noise1-rgba444fstein.png -pix_fmt -f rawvideo - | ./rgba4444.lua 512 720 > 1489u-w2x-noise1-fstein.rgba4444
 cat 1489u-w2x-noise1-fstein.rgba4444 | pigz -z -11 > test-1489u-rgba4444.zz
