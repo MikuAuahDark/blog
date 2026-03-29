@@ -1,0 +1,73 @@
+name: Build
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  discussions: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: '3.14'
+    
+    - name: Checkout Engine
+      uses: actions/checkout@v6
+      with:
+        repository: MikuAuahDark/blog-engine
+        ref: master
+
+    - name: Checkout Blog
+      uses: actions/checkout@v6
+      with:
+        path: content
+        fetch-depth: 0
+
+    - name: Checkout Metadata
+      uses: actions/checkout@v6
+      with:
+        path: metadata
+        ref: metadata
+        fetch-depth: 0
+
+    - name: Checkout gh-pages
+      uses: actions/checkout@v6
+      with:
+        path: gh-pages
+        ref: gh-pages
+        fetch-depth: 0
+
+    - name: Install Python Dependencies
+      run: pip install --break-system-packages --root-user-action ignore -r requirements.txt -r content/renderer/requirements.txt
+
+    - name: Update Blog
+      id: blog
+      run: python main.py
+    
+    - name: Re-copy Assets
+      run: |
+        set -e
+        rm -rf gh-pages/assets
+        cp -r content/assets gh-pages/assets
+
+    - name: Commit Metadata
+      uses: EndBug/add-and-commit@v10
+      with:
+        cwd: metadata
+        default_author: github_actions
+        message: "Update metadata from ${{ steps.blog.outputs.before_sha }} to ${{ steps.blog.outputs.after_sha }}"
+        push: true
+
+    - name: Commit gh-pages
+      uses: EndBug/add-and-commit@v10
+      with:
+        cwd: gh-pages
+        default_author: github_actions
+        message: "Update pages from ${{ steps.blog.outputs.before_sha }} to ${{ steps.blog.outputs.after_sha }}"
+        push: true

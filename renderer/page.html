@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>{{ title|e }}</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header a.copy {
+			opacity: 0;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header:hover a.copy {
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center
+		}
+
+		abbr {
+			cursor: help
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+
+		async function copyToClipboard(id) {
+			const url = `${window.location.origin}${window.location.pathname}#${id}`
+			await navigator.clipboard.writeText(url)
+			$.toast({
+				class: 'success',
+				showProgress: 'bottom',
+				class: 'green',
+				message: 'Link copied to clipboard!'
+			})
+		}
+
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			})
+
+			for (const elem of document.querySelectorAll(":is(h1, h2, h3, h4, h5, h6).ui.header a.copy")) {
+				elem.addEventListener("click", async function () {
+					await copyToClipboard(elem.parentElement.id)
+				})
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">{{ title|e }}</h1>
+	<div class="ui text container">
+		<p><a href="../">MikuAuahDark's blog</a></p>
+		<p>
+			<abbr title="{{ date }}"><time datetime="{{ date }}" convert-to-local>{{ date|e }}</time></abbr>
+			{% if last_modified %}
+			(Updated <abbr title="{{ last_modified }}"><time datetime="{{ last_modified }}" convert-to-local>{{
+					last_modified|e }}</time></abbr>)
+			{% endif %}
+		</p>
+		<p><a href="{{ source }}">Post source</a></p>
+		<article class="ui blue segment">
+			{{ content }}
+		</article>
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>MikuAuahDark's Blog</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center;
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">MikuAuahDark's blog</h1>
+	<div class="ui text container">
+		{% for page in pages %}
+		<div class="ui blue segment">
+			<h1 class="ui header"><a href="post/{{ page.slug }}.html">{{ page.title|e }}</a></h1>
+			<p>
+				<abbr title="{{ page.date }}">
+					<time datetime="{{ page.date }}" convert-to-local>{{ page.date|e }}</time>
+				</abbr>
+				{% if page.last_modified %}
+				( Updated <abbr title="{{ page.last_modified }}">
+					<time datetime="{{ page.last_modified }}" convert-to-local>{{ page.last_modified|e }}</time>
+				</abbr> )
+				{% endif %}
+			</p>
+			{{ page.partial_content }}
+			{% if page.see_more %}
+			<p><a href="post/{{ page.slug }}.html">Read more</a></p>
+			{% endif %}
+		</div>
+		{% endfor %}
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>
