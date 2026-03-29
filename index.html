@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>MikuAuahDark's Blog</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center;
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			});
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">MikuAuahDark's blog</h1>
+	<div class="ui text container">
+		
+		<div class="ui blue segment">
+			<h1 class="ui header"><a href="post/10ms-latency-genshin.html">Can I have 10ms Latency in Genshin Impact in Indonesia?</a></h1>
+			<p>
+				<abbr title="2026-03-29T05:36:03+00:00">
+					<time datetime="2026-03-29T05:36:03+00:00" convert-to-local>2026-03-29T05:36:03+00:00</time>
+				</abbr>
+				
+			</p>
+			<p>On the other day, my friend wonder if there will be an Indonesia ISP which allows him to play Genshin Impact with 10ms
+ping.</p>
+
+			
+			<p><a href="post/10ms-latency-genshin.html">Read more</a></p>
+			
+		</div>
+		
+		<div class="ui blue segment">
+			<h1 class="ui header"><a href="post/sif1-note-handling-2.html">SIF Note Handling: Observation &amp; Accuracy.</a></h1>
+			<p>
+				<abbr title="2018-05-01T14:04:00+08:00">
+					<time datetime="2018-05-01T14:04:00+08:00" convert-to-local>2018-05-01T14:04:00+08:00</time>
+				</abbr>
+				
+			</p>
+			<p>Recently some people complain about Live Simulator: 2 timing. I exactly remember that Live Simulator: 2 code the note
+accuracy based on my <a href="sif1-note-handling.html">previous article</a> regarding SIF note handling, but they say it doesn't
+seems right, so I decide to test it in Live Simulator: 2 and SIF. The difference were significant but not very. I
+decide to record my SIF note tapping observation video below.</p>
+
+			
+			<p><a href="post/sif1-note-handling-2.html">Read more</a></p>
+			
+		</div>
+		
+		<div class="ui blue segment">
+			<h1 class="ui header"><a href="post/sif1-note-handling.html">SIF Note Handling</a></h1>
+			<p>
+				<abbr title="2018-03-26T19:55:00+08:00">
+					<time datetime="2018-03-26T19:55:00+08:00" convert-to-local>2018-03-26T19:55:00+08:00</time>
+				</abbr>
+				
+			</p>
+			<p><strong>This theoretical article is now invalid. Please see <a href="sif-note-handling-2.html">this article</a> for real-life
+observation!</strong></p>
+
+			
+			<p><a href="post/sif1-note-handling.html">Read more</a></p>
+			
+		</div>
+		
+		<div class="ui blue segment">
+			<h1 class="ui header"><a href="post/sif1-image-quality.html">Fixing Image Quality of SIF Cards: RGBA4444 vs. RGB565</a></h1>
+			<p>
+				<abbr title="2018-03-16T22:27:00+08:00">
+					<time datetime="2018-03-16T22:27:00+08:00" convert-to-local>2018-03-16T22:27:00+08:00</time>
+				</abbr>
+				
+			</p>
+			<p>Some people discussing about SIF cards image quality being sucks since New Year Kanan UR. They said somehow KLab
+change the dithering method used in cards and always uses RGBA4444. I argue that RGB565 for clean UR card are better
+and actually makes sense (clean UR card doesn't need transparency, but &quot;navi&quot;[^1] requires transparency).</p>
+
+			
+			<p><a href="post/sif1-image-quality.html">Read more</a></p>
+			
+		</div>
+		
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>

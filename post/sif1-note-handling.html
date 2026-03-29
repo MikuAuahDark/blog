@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>SIF Note Handling</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header a.copy {
+			opacity: 0;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header:hover a.copy {
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center
+		}
+
+		abbr {
+			cursor: help
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+
+		async function copyToClipboard(id) {
+			const url = `${window.location.origin}${window.location.pathname}#${id}`
+			await navigator.clipboard.writeText(url)
+			$.toast({
+				class: 'success',
+				showProgress: 'bottom',
+				class: 'green',
+				message: 'Link copied to clipboard!'
+			})
+		}
+
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			})
+
+			for (const elem of document.querySelectorAll(":is(h1, h2, h3, h4, h5, h6).ui.header a.copy")) {
+				elem.addEventListener("click", async function () {
+					await copyToClipboard(elem.parentElement.id)
+				})
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">SIF Note Handling</h1>
+	<div class="ui text container">
+		<p><a href="../">MikuAuahDark's blog</a></p>
+		<p>
+			<abbr title="2018-03-26T19:55:00+08:00"><time datetime="2018-03-26T19:55:00+08:00" convert-to-local>2018-03-26T19:55:00+08:00</time></abbr>
+			
+		</p>
+		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/sif1-note-handling.md">Post source</a></p>
+		<article class="ui blue segment">
+			<p><strong>This theoretical article is now invalid. Please see <a href="sif-note-handling-2.html">this article</a> for real-life
+observation!</strong></p>
+<p><strong>For sake of clarity, SIF in here refers to SIF1, not SIF2!</strong></p>
+<p>Alright this is probably most questionable question in SIF. How SIF handles note timing and timing offset?</p>
+<p><img class="ui bordered rounded image" src="../assets/Kh8RTwH.png" alt="" title="Whoever programmed this is an asshole">
+
+(Disclaimer: I do not own the image. Original imgur image here: <a href="https://imgur.com/Kh8RTwH">https://imgur.com/Kh8RTwH</a>)</p>
+<p>I'll explain SIF timing system first.</p>
+<p>SIF uses actual time units (in seconds) to calculate how fast the notes are. In SIF there's timing setting in the live
+setting which is something like this (look at right slider, there are 5):</p>
+<p><img class="ui bordered rounded image" src="../assets/sif1-timing.png" alt="" title="As of SIF JP v5.7">
+</p>
+<p>Everytime you slide to left (it's snapped tho), the time increase by 0.1 second, and everytime you slide to the right,
+the time decrease by 0.1 second. Based on those sliders, that means there are limits:</p>
+<ul class="ui list"><li>Minimum value (all to the right) is 0.6 second</li>
+<li>Maximum value (all to the left) is 1.75 second</li>
+</ul>
+<p>UPDATE: Winshley from reddit says that first 6 values in the slider increase/decrease the time by 0.15 second, up to
+point where it's 1.0 second. Then afterwards, the time increase/decrease by 0.1 second.
+<a href="https://www.reddit.com/r/SchoolIdolFestival/comments/878jl8/other_i_written_post_about_how_sif_handles_note/dwb0fki/">Look at here</a>.</p>
+<p>That time variable is used to calculate the speed of the note. An example, if you set the slider all to the right then
+twice to the left, that means the note will took 800ms to reach idol position from the &quot;musical&quot; note icon which means
+the note velocity will be 500 pixel/second, look at visual below from my Live Simulator: 2 which uses aspects from SIF:</p>
+<p><img class="ui bordered rounded image" src="../assets/sif_note_explanation.png" alt="">
+
+(To make things clear, it should be &quot;Note Velocity = 500 pixel/second&quot; there)</p>
+<p>That image explanation assumes some things: It assumes the whole canvas is 960x640, which is actually how SIF handles
+resolution. It also assumes the note speed is 800ms or 0.8s.</p>
+<p>Now for tap accuracy, which determines if it's perfect, great, good, bad, or even miss is also based on that formula.
+But at first, look at this table:</p>
+<table class="ui celled table"><thead>
+<tr>
+  <th>Judgement</th>
+  <th>Init. Accuracy Val. (px)</th>
+  <th>Acc. Dist. from Icon (px)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><strong>PERFECT</strong></td>
+  <td>16</td>
+  <td>12.8</td>
+</tr>
+<tr>
+  <td><strong>GREAT</strong></td>
+  <td>40</td>
+  <td>32</td>
+</tr>
+<tr>
+  <td><strong>GOOD</strong></td>
+  <td>64</td>
+  <td>51.2</td>
+</tr>
+<tr>
+  <td><strong>BAD</strong></td>
+  <td>112</td>
+  <td>89.6</td>
+</tr>
+<tr>
+  <td><strong>MISS</strong></td>
+  <td>128</td>
+  <td>102.4</td>
+</tr>
+</tbody>
+</table>
+<p>(For more information, see the original image here: &lt;../assets/sif_judgement_value.png&gt;)</p>
+<p>The reason why you can't get &quot;Bad&quot; in swing note because for swing note, it's stated PERFECT if it's in Great accuracy
+range; it's stated GREAT if it's in Good accuracy range, and so on. And when the judgement range is drawn:</p>
+<p><img class="ui bordered rounded image" src="../assets/sif_judgement_image.png" alt="" title="I don&#x27;t know why there&#x27;s &amp;quot;Miss&amp;quot; endpoint, where in theory you should already miss it if the note is outside the &amp;quot;Bad&amp;quot; note range.">
+</p>
+<p>For other note speed, you can use this formula to determine the range:</p>
+<pre><code>AccuracyValue = AccuracyTable * max(NoteSpeed, 0.8)
+</code></pre>
+<p>Yes there's <code>max</code> statement there. As the note velocity is smaller, the judgement range is also bigger. And as the note
+velocity is bigger, the judgement range is also smaller, but up to point in the excel table above. Note that the value
+are both positive and negative</p>
+<p>Now the timing offset in setting. It turns out that in SIF, the note distance calculation follow this formula:</p>
+<pre><code>NoteDistance = (1 - NoteTimeSinceSpawn/NoteSpeed) * 400 + TimingOffset
+</code></pre>
+<p>That's why if you decrease the timing offset, you have to tap the note later, and if you increase the timing offset,
+you have to tap the note sooner, but unfortunately that &quot;NoteDistance&quot; variable is only calculated when trying to get
+the judgement and doesn't reflect the actual note distance displayed in the screen, which is described in the first
+image in this blog post.</p>
+<p><img class="ui bordered rounded image" src="../assets/Kh8RTwH.png" alt="" title="Whoever programmed this is an asshole">
+</p>
+<p>Some people find it unfortunate but some people is just deal with it. Fortunately Live Simulator: 2 handles offset
+differently. Instead of using that technique, Live Simulator: 2 shifts the beatmap by specificed amount in
+milliseconds.</p>
+<p>UPDATE: It turns out that the &quot;MISS&quot; judgement is checked without taking timing offset into account, which is why in
+-50 offset, getting late &quot;Bad&quot; is near-impossible. Thanks to Winshley from reddit for pointing things up.</p>
+<p>Based on that formula, it turns out that setting the note speed to less than 0.3125 second makes getting &quot;PERFECT&quot;
+judgement nearly impossible because the limiting formula described above. With 0.3125 second note speed, the note will
+travel 25.6 Pixel/AudioFrame, where AudioFrame is 0.02 second (20 FPS). Example, if note distance is 12.8, then in the
+next update, it will simply become -12.8, completely missed the &quot;PERFECT&quot; judgement range.</p>
+<p>UPDATE2: Making things clear about which one is Note speed and which one is note velocity.</p>
+<p>So to end this blog post, you shouldn't set your note speed to less than 0.3125 or Strawberry will Trap you up, then
+the Determination Symphony will determine your punishment.</p>
+<p>Originally posted on my legacy Blogger: <a href="https://auahdark687291.blogspot.com/2018/03/sif-note-handling.html">https://auahdark687291.blogspot.com/2018/03/sif-note-handling.html</a></p>
+
+		</article>
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>

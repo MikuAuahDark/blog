@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Fixing Image Quality of SIF Cards: RGBA4444 vs. RGB565</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header a.copy {
+			opacity: 0;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header:hover a.copy {
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center
+		}
+
+		abbr {
+			cursor: help
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+
+		async function copyToClipboard(id) {
+			const url = `${window.location.origin}${window.location.pathname}#${id}`
+			await navigator.clipboard.writeText(url)
+			$.toast({
+				class: 'success',
+				showProgress: 'bottom',
+				class: 'green',
+				message: 'Link copied to clipboard!'
+			})
+		}
+
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			})
+
+			for (const elem of document.querySelectorAll(":is(h1, h2, h3, h4, h5, h6).ui.header a.copy")) {
+				elem.addEventListener("click", async function () {
+					await copyToClipboard(elem.parentElement.id)
+				})
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">Fixing Image Quality of SIF Cards: RGBA4444 vs. RGB565</h1>
+	<div class="ui text container">
+		<p><a href="../">MikuAuahDark's blog</a></p>
+		<p>
+			<abbr title="2018-03-16T22:27:00+08:00"><time datetime="2018-03-16T22:27:00+08:00" convert-to-local>2018-03-16T22:27:00+08:00</time></abbr>
+			
+		</p>
+		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/sif1-image-quality.md">Post source</a></p>
+		<article class="ui blue segment">
+			<p>Some people discussing about SIF cards image quality being sucks since New Year Kanan UR. They said somehow KLab
+change the dithering method used in cards and always uses RGBA4444. I argue that RGB565 for clean UR card are better
+and actually makes sense (clean UR card doesn't need transparency, but &quot;navi&quot;<sup class="footnote-ref" id="fnref-1"><a href="#fn-1">1</a></sup> requires transparency).</p>
+<p>For sake of legal, all images used here are copyright &amp;copy; 2018 KLab Inc.</p>
+<p>Here's the original card image, to be used for comparison (the latest Ruby UR card paired with Yoshiko as I'm writing
+this):</p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-origf.png" alt="" title="Ruby-chaaaaannnnn?">
+</p>
+<p>You can notice the grainy pictures, or noise caused by dithering and RGBA4444 color loss. I start to think that
+something wrong about the dithering algorithm. Here's the version with selective gaussian blur applied (someone in the
+discussion do the blur):</p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-sgb.png" alt="" title="Haaaiii! Nani ga suki?">
+</p>
+<p>Selective gaussian blur does the job looks like, but I said, that waifu2x can achieve something better, but then he
+doesn't agree and says that waifu2x destroys the edges and some parts of the image. Well, I'm just gonna do it anyway.
+I tried many different methods, like noise level 1, level 2, noise level 2 then 2x scale then 50% downresize, but I
+found noise level 1 is already doing the job pretty well and noise level 2 destroys some details as he says before.
+Here's the image result:</p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1.png" alt="" title="Chocominto, yori mo a-na-ta!">
+</p>
+<p>Ok it looks good now, so let's apply RGBA4444 conversion and dithering to the noise removed image. Unfortunately,
+ImageMagick can't do RGBA4444 conversion (and any 16bit RGB color conversion) and specify dithering at same time, so I
+have to generate the necessary color table (RGBA4444 and RGBA565 for our purpose) and use <code>-remap</code> option in
+ImageMagick later. Here's the command that I use to generate the color table:</p>
+<pre><code class="language-batch">magick convert -size 256x256 xc:none -channel R -fx &quot;((i*w+j)&amp;15)/15.0&quot; -channel G -fx &quot;(((i*w+j)&gt;&gt;4)&amp;15)/15.0&quot; -channel B -fx &quot;(((i*w+j)&gt;&gt;8)&amp;15)/15.0&quot; -channel A -fx &quot;(((i*w+j)&gt;&gt;12)&amp;15)/15.0&quot; rgba4444.png
+magick convert -size 256x256 xc:white -channel R -fx &quot;((i*w+j)&amp;31)/31.0&quot; -channel G -fx &quot;(((i*w+j)&gt;&gt;5)&amp;63)/63.0&quot; -channel B -fx &quot;(((i*w+j)&gt;&gt;11)&amp;31)/31.0&quot; rgb565.png
+</code></pre>
+<p>Now we can tell ImageMagick to use our color table:</p>
+<pre><code class="language-batch">magick convert 1489u-w2x-noise1.png -dither none -remap rgba4444.png 1489u-w2x-noise1-rgba444none.png
+magick convert 1489u-w2x-noise1.png -dither riemersma -remap rgba4444.png 1489u-w2x-noise1-rgba444rie.png
+magick convert 1489u-w2x-noise1.png -dither floydsteinberg -remap rgba4444.png 1489u-w2x-noise1-rgba444fstein.png
+</code></pre>
+<p>And here's the result:</p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1-rgba444none.png" alt="" title="-dither none">
+
+<code>-dither none</code></p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1-rgba444rie.png" alt="" title="-dither riemersma">
+
+<code>-dither riemersma</code></p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1-rgba444fstein.png" alt="" title="-dither floydsteinberg">
+
+<code>-dither floydsteinberg</code></p>
+<p>With <code>-dither none</code>, the color difference is very noticeable, while using <code>-dither riemersma</code> or
+<code>-dither floydsteinberg</code> produces similar result to dithering algorithm that KLab uses (if you look closely, KLab
+dithering looks better a bit). So it's the RGBA4444 that causing image quality problems. Ok now let's switch to RGB565.</p>
+<pre><code class="language-batch">magick convert 1489u-w2x-noise1.png -dither none -remap rgb565.png 1489u-w2x-noise1-rgb565none.png
+magick convert 1489u-w2x-noise1.png -dither riemersma -remap rgb565.png 1489u-w2x-noise1-rgb565rie.png
+magick convert 1489u-w2x-noise1.png -dither floydsteinberg -remap rgb565.png 1489u-w2x-noise1-rgb565fstein.png
+</code></pre>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1-rgb565none.png" alt="" title="-dither none">
+
+<code>-dither none</code></p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1-rgb565rie.png" alt="" title="-dither riemersma">
+
+<code>-dither riemersma</code></p>
+<p><img class="ui bordered rounded image" src="../assets/1489u-w2x-noise1-rgb565fstein.png" alt="" title="-dither floydsteinberg">
+
+<code>-dither floydsteinberg</code></p>
+<p>Oh! The RGB565 variant looks way better than ones encoded with RGBA4444. My argument is correct that RGB565 is
+certainly better for clean UR cards rather than RGBA4444. But the problem is, the RGB565 variant increase twice as
+RGBA4444 variant and that's just the PNG representation, so let's try to simulate how it's stored in SIF game engine
+texture bank format and compare their size.</p>
+<p>SIF texture bank can store the raw pixel data in variety of different pixel formats<sup class="footnote-ref" id="fnref-2"><a href="#fn-2">2</a></sup>. For RGB, there are RGBA5551,
+RGBA4444, RGB565, and RGBA8888 (RGBA8888 is the usual pixel formats used in images and Photoshop RGB/8). The raw pixel
+data can be stored uncompressed or compressed with zlib<sup class="footnote-ref" id="fnref-3"><a href="#fn-3">3</a></sup>, PVR, ETC, or other compression formats supported by the
+GPU, but most of the time KLab just uses zlib compression, so we use zlib compression. In this example, we picked
+<code>-dither floydsteinberg</code> with RGB565 and RGBA4444 variant. For sake of tool completeness, I used Linux WSL environment
+since I don't know how to specify compression level in <code>openssl zlib</code>.</p>
+<p>Unfortunately, FFmpeg nor ImageMagick can't output to raw RGBA4444, so I write my own script to do it later in WSL.
+Here's the Lua script:</p>
+<pre><code class="language-lua">#!/usr/bin/env luajit
+-- Expected RGBA8888 stdin
+
+local ffi = require(&quot;ffi&quot;)
+local w = assert(tonumber(arg[1]))
+local h = assert(tonumber(arg[2]))
+
+local rgba4444 = ffi.new(&quot;uint16_t[?]&quot;, w*h)
+local rgbstruct = ffi.typeof(&quot;union {struct {uint8_t r,g,b,a;} rgba; uint8_t raw[4];}&quot;)
+
+for i = 1, w*h do
+    local d = rgbstruct {raw = io.read(4)}
+    -- Remember FFI arrays are 0-based index
+    local r = bit.lshift(bit.rshift(d.rgba.r, 4), 12)
+    local g = bit.lshift(bit.rshift(d.rgba.g, 4), 8)
+    local b = bit.lshift(bit.rshift(d.rgba.b, 4), 4)
+    local a = bit.rshift(d.rgba.a, 4)
+    rgba4444[i-1] = bit.bor(bit.bor(r, g), bit.bor(b, a))
+end
+
+io.write(ffi.string(rgba4444, w*h*ffi.sizeof(&quot;uint16_t&quot;)))
+os.exit(0)
+</code></pre>
+<p>And here's the command I'm using in WSL:</p>
+<pre><code class="language-basb">ffmpeg -i 1489u-w2x-noise1-rgb565fstein.png -pix_fmt rgb565 -f rawvideo 1489u-w2x-noise1-fstein.rgb565
+ffmpeg -i 1489u-w2x-noise1-rgba444fstein.png -pix_fmt -f rawvideo - | ./rgba4444.lua 512 720 &gt; 1489u-w2x-noise1-fstein.rgba4444
+cat 1489u-w2x-noise1-fstein.rgba4444 | pigz -z -11 &gt; test-1489u-rgba4444.zz
+cat 1489u-w2x-noise1-fstein.rgb565 | pigz -z -11 &gt; test-1489u-rgb565.zz
+</code></pre>
+<p>With just this information, we can estimate the texture bank size. RGBA4444 variant size (compressed) is 245965 bytes, and the RGB565 variant size (compressed) is 399097 bytes. That's 162% size increase. Now let's calculate how much the additional size increase in SIF data if RGB565 is used. We also need to assume average 165% size increase, avg. 500KB of each card file (in RGBA4444), and all clean UR cards are encoded in RGBA4444 (actually, there are already cards that are encoded to RGB565 before, but let's assume all images were encoded to RGBA4444 at the moment to simplify it).</p>
+<p>As of writing, <a href="https://schoolido.lu/cards/">School Idol Tomodachi</a> says there are 86 SSR and 234 UR cards. Not all cards have unidolized form and only have idolized variant, but we still can get estimation of such cards from School Idol Tomodachi too, and it says there are no SSR and 79 UR cards with only idolized form<sup class="footnote-ref" id="fnref-4"><a href="#fn-4">4</a></sup>, which in total there are 561 cards<sup class="footnote-ref" id="fnref-5"><a href="#fn-5">5</a></sup>. The cards total size when encoded is:</p>
+<pre><code>RGBA4444 Cards = 561 Cards * 500 KB = 274 MB
+RGB565 Cards = RGBA4444 Cards (274 MB) * 165% = 452 MB
+Size Increase = |274 MB - 452 MB| = 178MB
+</code></pre>
+<p>The size increase is ~178MB. How big is it? BanG Dream Girls Band Party voice size is ~150MB if I remember.
+Live Simulator: 2 APK size is 23MB<sup class="footnote-ref" id="fnref-6"><a href="#fn-6">6</a></sup>, equivalent to 8 Live Simulator: 2 in your Android phone. 178MB is around twice
+of SIF install data size (the one preloaded into your phone when you started SIF for the first time). Size increase of
+178MB should be acceptable, so I think it's gonna worth it if it's re-encoded to RGB565. The problem is that you'll
+have to download ~452MB of cards if this happends.</p>
+<p>The conclusion is: I don't see reason why KLab uses RGBA4444 for clean UR cards except to reduce size, but the
+quality-size tradeoff is simply unbalanced (as in UNBALANCED LOVE), so KLab should change the pixel format for their
+clean UR cards from RGBA4444 to RGB565 to increase the image quality, and then use Genki Zenkai dither algorithm with
+DAY! DAY! DAY! recipe to decrease the size a bit.</p>
+<p>Originally posted on my legacy Blogger: <a href="https://auahdark687291.blogspot.com/2018/03/fixing-image-quality-of-sif-cards_16.html">https://auahdark687291.blogspot.com/2018/03/fixing-image-quality-of-sif-cards_16.html</a></p>
+<section class="footnotes">
+<ol>
+<li id="fn-1"><p>&quot;navi&quot; means the transparent variant of SIF cards, the one used in your home SIF menu. Dunno if KLab is having joke with Avatar, but of course KLab doesn't know anything about the Legend of Aang.<a href="#fnref-1" class="footnote">&#8617;</a></p></li>
+<li id="fn-2"><p><a href="https://github.com/DarkEnergyProcessor/Itsudemo/blob/68a15cab82b171a538334c4d4891818927121de4/TEXB_stream_format.txt#L29">https://github.com/DarkEnergyProcessor/Itsudemo/blob/68a15cab82b171a538334c4d4891818927121de4/TEXB_stream_format.txt#L29</a><a href="#fnref-2" class="footnote">&#8617;</a></p></li>
+<li id="fn-3"><p><a href="https://github.com/DarkEnergyProcessor/Itsudemo/blob/68a15cab82b171a538334c4d4891818927121de4/src/TEXBLoad.cpp#L280">https://github.com/DarkEnergyProcessor/Itsudemo/blob/68a15cab82b171a538334c4d4891818927121de4/src/TEXBLoad.cpp#L280</a><a href="#fnref-3" class="footnote">&#8617;</a></p></li>
+<li id="fn-4"><p><a href="https://schoolido.lu/cards/?search=&amp;rarity=UR&amp;attribute=&amp;is_promo=on">https://schoolido.lu/cards/?search=&amp;rarity=UR&amp;attribute=&amp;is_promo=on</a> and <a href="https://schoolido.lu/cards/?search=&amp;rarity=SSR&amp;attribute=&amp;is_promo=on">https://schoolido.lu/cards/?search=&amp;rarity=SSR&amp;attribute=&amp;is_promo=on</a><a href="#fnref-4" class="footnote">&#8617;</a></p></li>
+<li id="fn-5"><p><code>IdolizedMultipler*(SSR TotalCard+UR TotalCard)-(SSR PromoCard+UR PromoCard)</code><a href="#fnref-5" class="footnote">&#8617;</a></p></li>
+<li id="fn-6"><p>In 2018, version <a href="https://github.com/DarkEnergyProcessor/livesim2_async/releases/tag/v2.1.1">2.1.2</a>. Unfortunately APKs are no longer available.<a href="#fnref-6" class="footnote">&#8617;</a></p></li>
+</ol>
+</section>
+
+		</article>
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<title>Can I have 10ms Latency in Genshin Impact in Indonesia?</title>
+	<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"
+		integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.css"
+		integrity="sha256-xlp3XbXCVlcKYMpXDnziC1QzN9j0SQiDjRiZ0qu6IOc=" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/fomantic-ui@2.9.4/dist/semantic.min.js"
+		integrity="sha256-Zh6NZwjzefLXtkIYJygkBuwIxUhZjOPgxKHvlGPo688=" crossorigin="anonymous"></script>
+	<style>
+		h1.ui.center.aligned.header {
+			margin-top: 1.5em;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header a.copy {
+			opacity: 0;
+		}
+
+		:is(h1, h2, h3, h4, h5, h6).ui.header:hover a.copy {
+			opacity: 1;
+			cursor: pointer;
+		}
+
+		footer {
+			padding: 1em 0;
+			text-align: center
+		}
+
+		abbr {
+			cursor: help
+		}
+	</style>
+	<script>
+		const formatter = new Intl.DateTimeFormat(undefined, {
+			weekday: 'long',
+			year: 'numeric',
+			month: 'short',
+			day: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			timeZoneName: 'short'
+		})
+
+		async function copyToClipboard(id) {
+			const url = `${window.location.origin}${window.location.pathname}#${id}`
+			await navigator.clipboard.writeText(url)
+			$.toast({
+				class: 'success',
+				showProgress: 'bottom',
+				class: 'green',
+				message: 'Link copied to clipboard!'
+			})
+		}
+
+		$(document).ready(function () {
+			$("time[convert-to-local]").each(function () {
+				const date = new Date($(this).attr("datetime"))
+				$(this).text(formatter.format(date))
+			})
+
+			for (const elem of document.querySelectorAll(":is(h1, h2, h3, h4, h5, h6).ui.header a.copy")) {
+				elem.addEventListener("click", async function () {
+					await copyToClipboard(elem.parentElement.id)
+				})
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h1 class="ui center aligned header">Can I have 10ms Latency in Genshin Impact in Indonesia?</h1>
+	<div class="ui text container">
+		<p><a href="../">MikuAuahDark's blog</a></p>
+		<p>
+			<abbr title="2026-03-29T05:36:03+00:00"><time datetime="2026-03-29T05:36:03+00:00" convert-to-local>2026-03-29T05:36:03+00:00</time></abbr>
+			
+		</p>
+		<p><a href="https://github.com/MikuAuahDark/blog/blob/master/10ms-latency-genshin.md">Post source</a></p>
+		<article class="ui blue segment">
+			<p>On the other day, my friend wonder if there will be an Indonesia ISP which allows him to play Genshin Impact with 10ms
+ping.</p>
+<p>Well, sorry to disappoint, but that's impossible. No, it's not because our technology is advanced enough (actually it
+is), but it's not possible because there's hard limit related to the laws of physics: speed of light.</p>
+<p>Why? First let's do some background. Genshin Impact is a single-player-oriented online game (weirdly). Since it's
+online, it has various servers which are <a href="https://hoyo.global/game-servers/">Europe, America, Asia, Taiwan, and China</a>
+(only for people who live in China). Focus on the Asia, the server is hosted in Tokyo, Japan. My friend and I live in
+Indonesia.</p>
+<p>Now the reason why it's impossible because the distance between Indonesia and Japan is
+<a href="https://distancecalculator.globefeed.com/Distance_Between_Countries_Result.asp?fromplace=Indonesia&amp;toplace=Japan">4821.39 km</a>
+(Wolfram says it's 4912 km, see below). The speed of light constant is 299792458 m/s. Doing the calculation tells me
+the minimum attainable latency by that distance is
+<a href="https://www.wolframalpha.com/input?i=distance+from+Indonesia+to+Japan+divided+by+speed+of+light">~16.38ms</a>. That means
+I need around 1 game frame at 60Hz monitor with VSync (or 1 game frame in Genshin Impact) to travel from Indonesia to
+Japan. Multiply it by 2 for the round-trip latency gives you <strong>~32.76ms</strong>. By that alone, it's been concluded that
+getting 10ms ping is <strong>not possible</strong>.</p>
+<p>&quot;<em>But data transfer instantly</em>&quot;
+No it's not. It still obey the laws of physics. That means in best case, your data transfer speed is limited by speed
+of light. Well, the best case. In fact,
+<a href="https://www.jumpfiber.com/fiber-optics-speed-of-light-broadband-internet/">light travels slower in fiber optics</a>,
+around 2/3 of it. Taking that into account, the minimum attainable latency is <strong>~49.15ms</strong>. This can be worsen
+furthermore by additional latency introduced by your WiFi and/or router and the ISP on both ends. That means, <strong>49.15ms
+is the data transfer speeds only, ignoring the router and ISP latency</strong>.</p>
+<p>&quot;<em>Alright then, but I want exactly 10ms latency. I don't want to live in Japan though. Where should I live?</em>&quot;
+For this, I assume the overhead latency of your router and ISP is ignored (a.k.a exactly 0ms). For 10ms round-trip
+latency, you need to live at 1998 km away from Tokyo, Japan. The closest would be South Korea, then Shanghai, China
+(but in this case you better go with their China client with China servers for minimum latency), then area around
+Sakhalin Oblast in Russia. If you want to take your router and ISP latency into account then you may want to live in
+Yuzhno-Sakhalinsk in Russia or South Korea. It's as closest to Japan without having to live in Japan.</p>
+<p>Note that if you have copper wire running from Russia to Japan instead of fiber optic, it
+<a href="https://networkengineering.stackexchange.com/q/16438">may be faster</a>, but electromagnetic interference will assure ...</p>
+<p>... you're gonna have a bad time</p>
+<p><a href="https://web.archive.org/web/20250109214220/https://cohost.org/AuahDark/post/866048-can-i-have-10ms-late">Originally posted on cohost</a></p>
+
+		</article>
+		<footer>Copyright &copy; 2026 MikuAuahDark. Licensed under <a
+				href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC-BY-4.0</a> unless noted
+			otherwise.</footer>
+	</div>
+</body>
+
+</html>
